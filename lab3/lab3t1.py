@@ -3,21 +3,21 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 def main():
-    dataset = sm.datasets.anes96.load_pandas()
-    df = dataset.data
+    dataset = sm.datasets.anes96.load_pandas() #upload anes96
+    df = dataset.data 
     colors= ["#33539E", "#A5678E"]
     sns.set_palette(sns.color_palette(colors))
 
 
     xaxis='TVnews' #same as factor
     yaxis='age'
-    target_class='vote'
+
     
     #print(df)
     unique_classes=sorted(df['vote'].unique())
     plt.figure(figsize=(6, 5))
     for i in unique_classes:
-        part=df[df[target_class]==i]
+        part=df[df['vote']==i]
         plt.scatter(
             x=part[xaxis], 
             y=part[yaxis],
