@@ -1,35 +1,36 @@
 from Bio import SeqIO
 
 def run1(input_file):
-    count_cds = 0 # cds counter
-    unique_species = set() # counter of unique species strings
+    count_cds= 0 # cds counter
+    unique_species =set() # counter of unique species strings with func set()
     
-    with open(input_file, "r") as fl:
+    with open(input_file, "r") as fl:   #standart opening in the read mode                          
         records = list(SeqIO.parse(fl, 'genbank'))
 
     for i in records:
-        cds = [y for y in i.features if y.type == 'CDS']
-        count_cds += len(cds) 
+        cds = [e for e in i.features if e.type=='CDS'] #pulls out coding sequences 
+        count_cds += len(cds)  #counts overall length
 
-        # Extract the biological species name string
-        species = i.annotations.get('source')
+        species = i.annotations.get('source') # Extracting names of species
         if species:
-            unique_species.add(species)
+            unique_species.add(species) #making list with unique species names
 
-        print(f'Species: {species} | Number of CDS: {len(cds)}')
+        print(f'Species: {species}.Number of CDS: {len(cds)}')
 
-    print('\n--------------------------------------')
-    print('Общее количество CDS: ', count_cds)
+    print('\n----------------')
+    print('overall number of CDS: ', count_cds)
     print('Найденные виды: ', unique_species)
 
-    # Substring evaluation to bypass NCBI nomenclature artifacts
-    has_falco = any("Falco peregrinus" in s for s in unique_species)
+# next part:
+#The Loop (for s in unique_species): The code opens your set of saved GenBank names and looks at them one by one.
+#then looks for any mention
+#if there is at least one returns True
+    has_falco = any("Falco peregrinus" in s for s in unique_species) 
     has_malus = any("Malus domestica" in s for s in unique_species)
-
-    # Verify BOTH conditions: At least 10 CDS, and the target taxonomic strings exist
-    if count_cds >= 10 and has_falco and has_malus:
-        print('Correct: Validation passed.')
+#-------------------------------
+    if count_cds >= 10 and has_falco and has_malus: #checks both conditions: presence of targeted species and >=10 coding sequences
+        print('Correct')
         return records
     else:
-        print('Incorrect: Validation failed.')
+        print('Incorrect')
         return None
